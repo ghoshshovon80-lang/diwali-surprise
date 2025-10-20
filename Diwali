@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diwali Surprise</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: black;
+            color: white;
+            overflow: hidden;
+        }
+        #initial {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 2em;
+        }
+        #hacker {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: none;
+        }
+        #final {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-size: 3em;
+            text-align: center;
+            background: linear-gradient(to bottom, #ff4500, #ffd700);
+            animation: fireworks 2s infinite;
+        }
+        @keyframes fireworks {
+            0% { background: linear-gradient(to bottom, #ff4500, #ffd700); }
+            50% { background: linear-gradient(to bottom, #ffd700, #ff4500); }
+            100% { background: linear-gradient(to bottom, #ff4500, #ffd700); }
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="initial">Welcome! Get ready for a Diwali surprise...</div>
+    <div id="hacker">
+        <canvas id="matrix"></canvas>
+    </div>
+    <div id="final">
+        <h1>Happy Diwali!</h1>
+        <p>May your festival be filled with joy and light.</p>
+    </div>
+
+    <script>
+        // Step 1: Show initial page for 2 seconds, then switch to hacker screen
+        setTimeout(() => {
+            document.getElementById('initial').style.display = 'none';
+            document.getElementById('hacker').style.display = 'block';
+            startMatrix(); // Start the hacker code effect
+        }, 2000);
+
+        // Step 2: Run hacker screen for 5 seconds, then switch to final page
+        setTimeout(() => {
+            document.getElementById('hacker').style.display = 'none';
+            document.getElementById('final').style.display = 'flex';
+            playSound(); // Play Diwali sound
+        }, 7000); // Total: 2s initial + 5s hacker
+
+        // Hacker Matrix Effect (simple raining code)
+        function startMatrix() {
+            const canvas = document.getElementById('matrix');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const letters = '01'; // Binary for hacker feel
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#0f0'; // Green text
+                ctx.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = letters[Math.floor(Math.random() * letters.length)];
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            setInterval(draw, 33); // ~30 FPS
+        }
+
+        // Play sound (replace with your own audio file URL)
+        function playSound() {
+            const audio = new Audio('https://www.soundjay.com/misc/sounds/firework-explosion-01.wav'); // Free firework sound; replace with Diwali music if desired
+            audio.play().catch(e => console.log('Audio play failed:', e)); // Handle autoplay restrictions
+        }
+    </script>
+</body>
+</html>
